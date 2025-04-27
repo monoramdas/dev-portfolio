@@ -2,6 +2,12 @@ import { createBrowserRouter, RouterProvider } from "react-router";
 import RootLayout from "../RootLayout/RootLayout";
 import React from "react";
 import Dashboard from "../Pages/Dashboard/Dashboard";
+import Registration from "../Pages/Registration/Registration";
+import Login from "@/Pages/Login/Login";
+import Profile from "@/Pages/Profile/Profile";
+import Explore from "@/Pages/Explore/Explore";
+import ProtectedRoute from "@/Components/ProtectedRoute/ProtectedRoute";
+import UserDetailsForm from "@/Pages/UserDetailsForm/userDetailsForm";
 
 function Router() {
   const router = createBrowserRouter([
@@ -11,16 +17,40 @@ function Router() {
       children: [
         {
           index: true,
-          element: <Dashboard/>,
+          element: <Dashboard />,
         },
         {
-          path: "/people",
-          element: <h1>people</h1>,
+          path: "/register",
+          element: <Registration />,
         },
         {
-          path: "/update-student",
-          element: <h1>home</h1>,
+          path: "/login",
+          element: <Login />,
         },
+        {
+          path: "/profile",
+          element: (
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/additional-details",
+          element: (
+            <ProtectedRoute>
+              <UserDetailsForm/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/explore",
+          element: (
+            <ProtectedRoute>
+              <Explore />
+            </ProtectedRoute>
+          ),
+        }
       ],
     },
   ]);

@@ -7,7 +7,7 @@ function RootLayout() {
   return (
     <div className="flex flex-col h-screen">
       <Header />
-      <div className="flex-1">
+      <div className="flex flex-1 bg-(--dark-background)">
         <Outlet />
       </div>
       <Footer />
