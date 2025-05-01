@@ -8,6 +8,7 @@ import Profile from "@/Pages/Profile/Profile";
 import Explore from "@/Pages/Explore/Explore";
 import ProtectedRoute from "@/Components/ProtectedRoute/ProtectedRoute";
 import UserDetailsForm from "@/Pages/UserDetailsForm/userDetailsForm";
+import ProjectDetailsForm from "@/Pages/ProjectDetailsForm/ProjectDetailsForm";
 
 function Router() {
   const router = createBrowserRouter([
@@ -40,6 +41,14 @@ function Router() {
           element: (
             <ProtectedRoute>
               <UserDetailsForm/>
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/project-details",
+          element: (
+            <ProtectedRoute>
+              <ProjectDetailsForm/>
             </ProtectedRoute>
           ),
         },

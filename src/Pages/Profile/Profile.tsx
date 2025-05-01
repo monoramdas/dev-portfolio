@@ -1,66 +1,147 @@
+import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
+import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
-import React, { useState } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { _ } from "react-router/dist/development/fog-of-war-BLArG-qZ";
 
 function Profile() {
+  const URL = "http://localhost:5000/api/users";
+  const PRJECTURL = "http://localhost:5000/api/projects";
+  const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     name: "",
     description: "",
     bio: "",
     skills: [],
   });
-  const [isEditing, setIsEditing] = useState(false);
-  const handleChange = (e:any) => {
-    const { name, value } = e.target;
-    setUserDetails((prevDetails) => ({
-      ...prevDetails,
-      [name]: value,
-    }));
+  const [projectDeatils, setProjectDetails] = useState([
+    {
+      _id:"",
+      title: "",
+      description: "",
+      link: "",
+      techStack: [],
+    },
+  ]);
+  const getId = localStorage.getItem("userInfo");
+  const userId = JSON.parse(getId as string)._id;
+  const token = JSON.parse(getId as string).token;
+
+  const getUserDetails = async () => {
+    try {
+      const resposnse = await axios.get(`${URL}/${userId}`);
+      setUserDetails(resposnse.data);
+    } catch (error) {
+      console.log("Error fetching user details:", error);
+    }
   };
-  console.log(userDetails.name,"name");
-  
+  const getProjectDetails = async () => {
+    try {
+      const res = await axios.get(`${PRJECTURL}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setProjectDetails(res.data);
+    } catch (error) {
+      console.log("Error fetching project details:", error);
+    }
+  };
+  const handleProjectDelete= async (projectId:string) => {
+    try {
+      const res = await axios.delete(`${PRJECTURL}/${projectId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert("Project deleted successfully!");
+      getProjectDetails();
+    } catch (error) {
+      console.log("Error deleting project:", error);
+    }
+  }
+
+  useEffect(() => {
+    getUserDetails();
+    getProjectDetails();
+  }, []);
+
   return (
     <div className="flex flex-col w-full gap-4 text-(--text-color-main) bg-(--card-background) border-2 border-(--border-subtle) rounded-lg p-4 m-4">
       <div>
-        {isEditing ? (
-          <>
-          <input
-            type="text"
-            onChange={handleChange}
-            name="name"
-            value={userDetails.name}
-          />
-          <Button onClick={()=>setIsEditing(false)}>Save</Button>
-          </>
-        ) : (
-          <div className="flex flex-row ">
-          <h1>{userDetails?.name || 'Name'}</h1>
-          <div  className="cursor-pointer"
-          onClick={()=>setIsEditing(true)}><svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            viewBox="0 0 16 16"
-          >
-            <path d="M15.502 1.94a.5.5 0 0 1 0 .706l-1.414 1.415-2.121-2.121L13.38.525a.5.5 0 0 1 .707 0l1.414 1.415zm-2.121 2.121L5 12.44V14h1.561l8.38-8.379-2.121-2.121z"/>
-          </svg></div>
-          {/* <Button onClick={()=>setIsEditing(true)}>Edit</Button> */}
+        <div className="flex flex-col gap-4 flex-1">
+          <div className="flex flex-row justify-between">
+            <div className="flex gap-4 items-center mb-4">
+              <Avatar className="w-20 h-20">
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
+              <div>
+                <h1 className="font-bold text-4xl">{userDetails.name}</h1>
+                <p>{userDetails.description}</p>
+              </div>
+            </div>
+            <Button onClick={() => navigate("/additional-details",{
+              state:{
+                name: userDetails.name,
+                description: userDetails.description,
+                bio: userDetails.bio,
+                skills: userDetails.skills,
+              }
+            })}>
+              Edit
+            </Button>
           </div>
-        )}
-        <p>description</p>
+          <div>
+            <h2 className="font-bold text-xl">Bio</h2>
+            <p>{userDetails.bio}</p>
+          </div>
+          <div>
+            <h2 className="font-bold text-xl pb-2">Skils</h2>
+            <div className="flex flex-row gap-2 flex-wrap">
+              {userDetails.skills.map((skill) => (
+                <Badge>{skill}</Badge>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <h2>Bio</h2>
-        <p>Bio content goes here...</p>
-      </div>
-      <div>
-        <h2>Skils</h2>
-        <p>skill 1</p>
-      </div>
-      <div>
-        <h2>Projects</h2>
-        <p>Project 1</p>
-        <p>Project 2</p>
+      <div className="flex flex-col gap-4 flex-1">
+        <div className="flex flex-row justify-between">
+          <h2 className="font-bold text-xl">Projects</h2>
+          <Button onClick={() => navigate("/project-details")}>Add</Button>
+        </div>
+        {projectDeatils.map((projectDeatils, index) => (
+          <div
+            key={index}
+            className="flex flex-row justify-between border-2 border-(--border-subtle) rounded-lg p-2 "
+          >
+            <div>
+              <h3 className="font-bold text-lg">{projectDeatils.title}</h3>
+              <p>{projectDeatils.description}</p>
+              <p>{projectDeatils.link}</p>
+              <p>{projectDeatils.techStack}</p>
+            </div>
+            <div className="flex flex-col gap-2">
+              <Button onClick={()=>navigate("/project-details",{
+                state:{
+                  title: projectDeatils.title,
+                  description: projectDeatils.description,
+                  link: projectDeatils.link,
+                  techStack: projectDeatils.techStack,
+                  isEdit: true,
+                  id: projectDeatils._id,
+                }
+              })}>Edit</Button>
+              <Button onClick={()=>handleProjectDelete(projectDeatils._id)}>Delete</Button>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
