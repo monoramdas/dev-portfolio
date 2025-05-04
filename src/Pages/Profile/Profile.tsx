@@ -69,7 +69,7 @@ function Profile() {
   }, []);
 
   return (
-    <div className="flex flex-col gap-4 text-(--text-color-main) bg-(--card-background) border-2 border-(--border-subtle) rounded-lg p-4">
+    <div className="flex flex-1 flex-col gap-4 text-(--text-color-main) bg-(--card-background) border-2 border-(--border-subtle) rounded-lg p-4">
       <div>
         <div className="flex flex-col gap-4 flex-1">
           <div className="flex flex-row justify-between">

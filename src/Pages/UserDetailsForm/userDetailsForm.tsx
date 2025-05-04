@@ -72,7 +72,7 @@ const UserDetailsForm = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center m-auto text-(--text-color-main) bg-(--card-background)">
+    <div className="flex max-w-1/2 flex-col items-center justify-center m-auto text-(--text-color-main) bg-(--card-background) rounded-lg p-4">
       <h2 className="text-2xl font-bold text-center mb-6">User Details Form</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4 w-lg">
         <div>

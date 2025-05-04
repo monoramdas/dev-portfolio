@@ -23,7 +23,7 @@ const Registration = () => {
   const handleSubmit = async () => {
     try {
       const response = await axios.post(URL, {
-        name: registrationDetails.firstName + "" + registrationDetails.lastName,
+        name: registrationDetails.firstName + " " + registrationDetails.lastName,
         email: registrationDetails.email,
         password: registrationDetails.password,
       });
@@ -37,8 +37,8 @@ const Registration = () => {
   };
 
   return (
-    <div className="flex flex-col text-(--text-color-main) bg-(--card-background) items-center m-auto border-2 border-(--border-subtle) rounded-lg p-4">
-      <div>Register</div>
+    <div className="flex flex-1 flex-col max-w-1/3 text-(--text-color-main) bg-(--card-background) items-center m-auto border-2 border-(--border-subtle) rounded-lg p-4">
+      <h1 className="text-2xl font-bold text-center mb-6">Register</h1>
       <form className="flex flex-col gap-4 p-4 w-xs" onSubmit={(e)=>e.preventDefault()}>
         <input
           type="text"

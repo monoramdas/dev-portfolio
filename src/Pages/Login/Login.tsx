@@ -26,7 +26,7 @@ function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center m-auto text-(--text-color-main) bg-(--card-background)  border-2 border-(--border-subtle) rounded-lg p-4">
+    <div className="flex flex-col items-center justify-center max-w-1/3 m-auto text-(--text-color-main) bg-(--card-background)  border-2 border-(--border-subtle) rounded-lg p-4">
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4 w-xs">
         {/* Email Field */}
