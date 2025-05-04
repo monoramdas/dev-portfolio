@@ -47,6 +47,7 @@ const Registration = () => {
           value={registrationDetails.firstName}
           onChange={handleChange}
           className="p-2 rounded-sm bg-(--border-subtle)"
+          required
         />
         <input
           type="text"
@@ -55,6 +56,7 @@ const Registration = () => {
           value={registrationDetails.lastName}
           onChange={handleChange}
           className="p-2 rounded-sm bg-(--border-subtle)"
+          required
         />
         <input
           type="email"
@@ -63,6 +65,7 @@ const Registration = () => {
           value={registrationDetails.email}
           onChange={handleChange}
           className="p-2 rounded-sm bg-(--border-subtle)"
+          required
         />
         <input
           type="password"
@@ -71,6 +74,7 @@ const Registration = () => {
           value={registrationDetails.password}
           onChange={handleChange}
           className="p-2 rounded-sm bg-(--border-subtle)"
+          required
         />
         <Button
           type="submit"

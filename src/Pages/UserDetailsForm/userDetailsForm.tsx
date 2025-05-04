@@ -5,18 +5,24 @@ import { useLocation, useNavigate } from "react-router";
 const UserDetailsForm = () => {
   const URL = "https://dev-portfolio-backed.onrender.com/api/users";
   const navigate = useNavigate();
-  const location= useLocation();
-  const {name, description, skills, bio} = location.state as {name: string, description: string, skills: string[], bio: string}
+  const location = useLocation();
+  const { name, description, skills, bio } = location.state as {
+    name: string;
+    description: string;
+    skills: string[];
+    bio: string;
+  };
+
   const [formData, setFormData] = useState({
-    name: name ||"",
-    description:description|| "",
-    skills:skills|| "",
-    bio: bio||"",
+    name: name || "",
+    description: description || "",
+    skills: skills || [""], // Initialize with an empty skill field
+    bio: bio || "",
   });
-  console.log(formData);
-  
+
   const getId = localStorage.getItem("userInfo");
   const userId = JSON.parse(getId as string)._id;
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -27,19 +33,42 @@ const UserDetailsForm = () => {
     }));
   };
 
+  const handleSkillChange = (index: number, value: string) => {
+    const updatedSkills = [...formData.skills];
+    updatedSkills[index] = value;
+    setFormData((prevData) => ({
+      ...prevData,
+      skills: updatedSkills,
+    }));
+  };
+
+  const addSkillField = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      skills: [...prevData.skills, ""],
+    }));
+  };
+
+  const removeSkillField = (index: number) => {
+    const updatedSkills = formData.skills.filter((_, i) => i !== index);
+    setFormData((prevData) => ({
+      ...prevData,
+      skills: updatedSkills,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     await axios.post(`${URL}/${userId}`, {
       name: formData.name,
       description: formData.description,
-      skills: formData.skills.map((skill) => skill.trim()),
+      skills: formData.skills,
       bio: formData.bio,
     });
     alert("User details submitted successfully!");
     navigate("/profile");
     console.log("Form Data Submitted:", formData);
-    // Add logic to send data to the backend or handle it as needed
   };
 
   return (
@@ -63,6 +92,7 @@ const UserDetailsForm = () => {
             required
           />
         </div>
+
         {/* Description Field */}
         <div>
           <label
@@ -91,16 +121,32 @@ const UserDetailsForm = () => {
           >
             Skills
           </label>
-          <input
-            type="text"
-            id="skills"
-            name="skills"
-            value={formData.skills}
-            onChange={handleChange}
-            className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-            placeholder="Enter your skills (comma-separated)"
-            required
-          />
+          {formData.skills.map((skill, index) => (
+            <div key={index} className="flex items-center gap-2 mb-2">
+              <input
+                type="text"
+                value={skill}
+                onChange={(e) => handleSkillChange(index, e.target.value)}
+                className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Enter a skill"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => removeSkillField(index)}
+                className="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addSkillField}
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
+          >
+            Add Skill
+          </button>
         </div>
 
         {/* Bio Field */}
@@ -124,7 +170,11 @@ const UserDetailsForm = () => {
         </div>
 
         <div className="flex flex-row gap-4 justify-between mt-4">
-          <button type="button" onClick={()=>navigate('/profile')} className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+          <button
+            type="button"
+            onClick={() => navigate("/profile")}
+            className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
             Back
           </button>
           <button
