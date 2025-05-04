@@ -7,8 +7,8 @@ import { useLocation, useNavigate } from "react-router";
 import { _ } from "react-router/dist/development/fog-of-war-BLArG-qZ";
 
 function UsersProfile() {
-  const URL = "http://localhost:5000/api/users";
-  const PRJECTURL = "http://localhost:5000/api/projects";
+  const API_URl=import.meta.env.VITE_API_URL;
+  const PRJECTURL = "https://dev-portfolio-backed.onrender.com/api/projects";
   const navigate = useNavigate();
   const location=useLocation();
   const {id}=location.state;
@@ -32,7 +32,7 @@ function UsersProfile() {
 
   const getUserDetails = async () => {
     try {
-      const resposnse = await axios.get(`${URL}/${id}`);
+      const resposnse = await axios.get(`${`${API_URl}/api/users`}/${id}`);
       setUserDetails(resposnse.data);
     } catch (error) {
       console.log("Error fetching user details:", error);

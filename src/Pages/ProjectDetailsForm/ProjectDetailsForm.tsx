@@ -11,7 +11,7 @@ type Project = {
 };
 
 const ProjectDetailsForm = () => {
-  const URL = "http://localhost:5000/api/projects";
+  const URL = "https://dev-portfolio-backed.onrender.com/api/projects";
   const location=useLocation();
   const navigate = useNavigate();
   const {title, description, link, techStack,id,isEdit} = location.state ||{};

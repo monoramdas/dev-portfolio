@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 
 const UserDetailsForm = () => {
-  const URL = "http://localhost:5000/api/users";
+  const URL = "https://dev-portfolio-backed.onrender.com/api/users";
   const navigate = useNavigate();
   const location= useLocation();
   const {name, description, skills, bio} = location.state as {name: string, description: string, skills: string[], bio: string}

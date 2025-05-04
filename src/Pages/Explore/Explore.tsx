@@ -6,14 +6,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 
 function Explore() {
-  const URL = "http://localhost:5000/api/users";
+  const API_URl=import.meta.env.VITE_API_URL;
+  // const URL = "http://localhost:5000/api/users";
   const navigate= useNavigate();
 
   const [users, setUsers] = useState([]);
 
   const fetchUsers = async () => {
     try {
-      const { data } = await axios.get(URL);
+      const { data } = await axios.get(`${API_URl}/api/users`);
       setUsers(data);
     } catch (error) {
       console.error("Error fetching users:", error);

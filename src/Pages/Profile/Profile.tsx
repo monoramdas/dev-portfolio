@@ -7,8 +7,8 @@ import { useNavigate } from "react-router";
 import { _ } from "react-router/dist/development/fog-of-war-BLArG-qZ";
 
 function Profile() {
-  const URL = "http://localhost:5000/api/users";
-  const PRJECTURL = "http://localhost:5000/api/projects";
+  const URL = "https://dev-portfolio-backed.onrender.com/api/users";
+  const PRJECTURL = "https://dev-portfolio-backed.onrender.com/api/projects";
   const navigate = useNavigate();
   const [userDetails, setUserDetails] = useState({
     name: "",

@@ -4,7 +4,7 @@ import { Button } from "@/Components/ui/button";
 import { useNavigate } from "react-router";
 
 const Registration = () => {
-  const URL = "http://localhost:5000/api/users/register";
+  const URL = "https://dev-portfolio-backed.onrender.com/api/users/register";
   const navigate=useNavigate();
   // State to hold registration details
   const [registrationDetails, setRegistrationDetails] = useState({
