@@ -3,13 +3,15 @@ import { Badge } from "@/Components/ui/badge";
 import { Button } from "@/Components/ui/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { _ } from "react-router/dist/development/fog-of-war-BLArG-qZ";
 
-function Profile() {
+function UsersProfile() {
   const URL = "http://localhost:5000/api/users";
   const PRJECTURL = "http://localhost:5000/api/projects";
   const navigate = useNavigate();
+  const location=useLocation();
+  const {id}=location.state;
   const [userDetails, setUserDetails] = useState({
     name: "",
     description: "",
@@ -18,7 +20,7 @@ function Profile() {
   });
   const [projectDeatils, setProjectDetails] = useState([
     {
-      _id:"",
+      _id: "",
       title: "",
       description: "",
       link: "",
@@ -26,12 +28,11 @@ function Profile() {
     },
   ]);
   const getId = localStorage.getItem("userInfo");
-  const userId = JSON.parse(getId as string)._id;
   const token = JSON.parse(getId as string).token;
 
   const getUserDetails = async () => {
     try {
-      const resposnse = await axios.get(`${URL}/${userId}`);
+      const resposnse = await axios.get(`${URL}/${id}`);
       setUserDetails(resposnse.data);
     } catch (error) {
       console.log("Error fetching user details:", error);
@@ -39,7 +40,7 @@ function Profile() {
   };
   const getProjectDetails = async () => {
     try {
-      const res = await axios.get(`${PRJECTURL}`, {
+      const res = await axios.get(`${PRJECTURL}/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -49,20 +50,7 @@ function Profile() {
       console.log("Error fetching project details:", error);
     }
   };
-  const handleProjectDelete= async (projectId:string) => {
-    try {
-      const res = await axios.delete(`${PRJECTURL}/${projectId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      alert("Project deleted successfully!");
-      getProjectDetails();
-    } catch (error) {
-      console.log("Error deleting project:", error);
-    }
-  }
-
+  
   useEffect(() => {
     getUserDetails();
     getProjectDetails();
@@ -86,16 +74,6 @@ function Profile() {
                 <p>{userDetails.description}</p>
               </div>
             </div>
-            <Button onClick={() => navigate("/additional-details",{
-              state:{
-                name: userDetails.name,
-                description: userDetails.description,
-                bio: userDetails.bio,
-                skills: userDetails.skills,
-              }
-            })}>
-              Edit
-            </Button>
           </div>
           <div>
             <h2 className="font-bold text-xl">Bio</h2>
@@ -114,7 +92,6 @@ function Profile() {
       <div className="flex flex-col gap-4 flex-1">
         <div className="flex flex-row justify-between">
           <h2 className="font-bold text-xl">Projects</h2>
-          <Button onClick={() => navigate("/project-details")}>Add</Button>
         </div>
         {projectDeatils.map((projectDeatils, index) => (
           <div
@@ -127,19 +104,6 @@ function Profile() {
               <p>{projectDeatils.link}</p>
               <p>{projectDeatils.techStack}</p>
             </div>
-            <div className="flex flex-col gap-2">
-              <Button onClick={()=>navigate("/project-details",{
-                state:{
-                  title: projectDeatils.title,
-                  description: projectDeatils.description,
-                  link: projectDeatils.link,
-                  techStack: projectDeatils.techStack,
-                  isEdit: true,
-                  id: projectDeatils._id,
-                }
-              })}>Edit</Button>
-              <Button onClick={()=>handleProjectDelete(projectDeatils._id)}>Delete</Button>
-            </div>
           </div>
         ))}
       </div>
@@ -147,4 +111,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default UsersProfile;

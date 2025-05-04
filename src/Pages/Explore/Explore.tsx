@@ -1,10 +1,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/Components/ui/avatar";
 import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/button";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 function Explore() {
   const URL = "http://localhost:5000/api/users";
+  const navigate= useNavigate();
 
   const [users, setUsers] = useState([]);
 
@@ -22,13 +25,13 @@ function Explore() {
   }, []);
 
   return (
-    <div className="ml-4 text-(--text-color-main)">
-      <h1 className="mb-2">Explore</h1>
-      <div className="flex gap-4">
+    <div className="flex flex-col gap-4 text-(--text-color-main) p-4">
+      <h1 className="text-3xl font-bold">Explore</h1>
+      <div className="flex flex-wrap gap-4">
         {users.map((user: any) => (
           <div
             key={user._id}
-            className="flex flex-col gap-4  bg-(--card-background) p-4 rounded-lg"
+            className="flex flex-col gap-4 grow-1 basis-0 box-border bg-(--card-background) p-4 rounded-lg shadow-md"
           >
             <div className="flex gap-4 items-center">
               <Avatar>
@@ -36,14 +39,34 @@ function Explore() {
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
               <div>
-              <h2 className="text-2xl">{user.name}</h2>
-              <p className="text-sm">{user.description ?? "Description"}</p>
+                <h2 className="text-2xl font-semibold">{user.name}</h2>
+                <p className="text-sm text-gray-400">
+                  {user.description ?? "No description available"}
+                </p>
               </div>
             </div>
-            <div className="flex gap-2">
-              {user.skills?.map((skill: any) => (
-                <Badge key={skill}>{skill}</Badge>
-              ))}
+            <div className="flex gap-2 flex-wrap">
+              {user.skills.length === 0 ? (
+                <p className="text-gray-400">Add skills</p>
+              ) : (
+                user.skills?.map((skill: any) => (
+                  <Badge key={skill} className="bg-blue-500 text-white">
+                    {skill}
+                  </Badge>
+                ))
+              )}
+            </div>
+            {/* Spacer to push the button to the bottom */}
+            <div className="flex-grow"></div>
+            <div>
+              <Button onClick={()=>navigate('/explore-users',{
+                state:{
+                  id: user._id,
+                }
+
+              })} className="bg-blue-500 text-white mt-4 w-full">
+                View Profile
+              </Button>
             </div>
           </div>
         ))}
